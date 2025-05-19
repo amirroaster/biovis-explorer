@@ -1,0 +1,40 @@
+# Node modules
+node_modules/
+
+# Compiled output
+dist/
+out-tsc/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Angular build files
+.angular/
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Environment files (optional, if you store secrets)
+src/environments/environment.prod.ts
+src/environments/environment.ts
+
+# Package lock files (optional, depends on your strategy)
+# Uncomment if you want to exclude them
+# package-lock.json
+# yarn.lock
+
+# Test results
+test-results/
