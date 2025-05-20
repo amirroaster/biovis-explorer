@@ -55,49 +55,188 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card mb-4">
-          <div class="card-header bg-primary text-white">
-            <h4>Molecular Weight Comparison</h4>
-          </div>
-          <div class="card-body">
-            <div id="weightChart" style="min-height: 300px;"></div>
-          </div>
-        </div>
-      </div>
 
-      <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-12">
         <div class="card mb-4">
           <div class="card-header bg-primary text-white">
-            <h4>Hydrogen Bond Donors Comparison</h4>
+            <h4>Multi-Property Comparison</h4>
           </div>
           <div class="card-body">
-            <div id="hBondDonorChart" style="min-height: 300px;"></div>
+            <div id="radarChartContainer" style="min-height: 500px;"></div>
+            <div class="text-center mt-3">
+              <p class="text-muted">This radar chart helps visualize how these compounds compare across multiple key
+                properties.</p>
+              <p class="text-muted">Values are normalized to show relative differences, allowing for multi-dimensional
+                comparison.</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
+
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-12">
         <div class="card mb-4">
           <div class="card-header bg-primary text-white">
-            <h4>XLogP Comparison</h4>
+            <h4>Property Comparison</h4>
           </div>
           <div class="card-body">
-            <div id="xlogpChart" style="min-height: 300px;"></div>
+            <div class="mb-3">
+              <label for="propertySelect">Select property to compare:</label>
+              <select id="propertySelect" class="form-control" (change)="changeBarChartProperty($event.target.value)">
+                <option value="molecularWeight">Molecular Weight</option>
+                <option value="xlogp">XLogP (Hydrophobicity)</option>
+                <option value="hBondDonorCount">H-Bond Donors</option>
+                <option value="hBondAcceptorCount">H-Bond Acceptors</option>
+                <option value="rotatableBondCount">Rotatable Bonds</option>
+                <option value="heavyAtomCount">Heavy Atoms</option>
+                <option value="complexity">Molecular Complexity</option>
+              </select>
+            </div>
+            <div id="barChartContainer" style="min-height: 400px;"></div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="col-md-6">
+
+    <div class="row">
+      <div class="col-md-12">
         <div class="card mb-4">
           <div class="card-header bg-primary text-white">
-            <h4>Hydrogen Bond Acceptors Comparison</h4>
+            <h4>Detailed Data Comparison</h4>
           </div>
           <div class="card-body">
-            <div id="hBondAcceptorChart" style="min-height: 300px;"></div>
+            <div class="table-responsive">
+              <table class="table table-striped table-hover">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Property</th>
+                    <th *ngFor="let compound of compounds">
+                      {{ compound.iupacName || 'CID: ' + compound.cid }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Molecular Formula</td>
+                    <td *ngFor="let compound of compounds">{{ compound.molecularFormula }}</td>
+                  </tr>
+                  <tr>
+                    <td>Molecular Weight (g/mol)</td>
+                    <td *ngFor="let compound of compounds">{{ compound.molecularWeight }}</td>
+                  </tr>
+                  <tr>
+                    <td>H-Bond Donors</td>
+                    <td *ngFor="let compound of compounds">{{ compound.hBondDonorCount }}</td>
+                  </tr>
+                  <tr>
+                    <td>H-Bond Acceptors</td>
+                    <td *ngFor="let compound of compounds">{{ compound.hBondAcceptorCount }}</td>
+                  </tr>
+                  <tr>
+                    <td>XLogP (Hydrophobicity)</td>
+                    <td *ngFor="let compound of compounds">{{ compound.xlogp }}</td>
+                  </tr>
+                  <tr>
+                    <td>Rotatable Bonds</td>
+                    <td *ngFor="let compound of compounds">{{ compound.rotatableBondCount }}</td>
+                  </tr>
+                  <tr>
+                    <td>Heavy Atoms</td>
+                    <td *ngFor="let compound of compounds">{{ compound.heavyAtomCount }}</td>
+                  </tr>
+                  <tr>
+                    <td>Molecular Complexity</td>
+                    <td *ngFor="let compound of compounds">{{ compound.complexity }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h4>Research Project Relevance</h4>
+          </div>
+          <div class="card-body">
+            <p>This analysis provides insights into how these compounds might interact with biological systems relevant
+              to the Institute's research projects:</p>
+
+            <div class="mt-4">
+              <h5>CELLMED Project</h5>
+              <p>The selected compounds exhibit varying hydrogen bond profiles, which could impact their interactions
+                with cell membrane proteins. Compounds with higher HBond donor/acceptor counts may have different cell
+                permeability characteristics relevant to the development of advanced cell models.</p>
+            </div>
+
+            <div class="mt-4">
+              <h5>SENECA Project</h5>
+              <p>Research on cellular senescence processes may be affected by molecular complexity and rotatable bond
+                count, which influence a compound's conformational flexibility and potential binding to target proteins
+                involved in aging pathways.</p>
+            </div>
+
+            <div class="mt-4">
+              <h5>DESMOJOINT Project</h5>
+              <p>Compounds with specific molecular weight ranges and structural characteristics might offer insights for
+                cardiac-related research, potentially interacting with desmoplakin proteins or related pathways.</p>
+            </div>
+
+            <div class="alert alert-info mt-4">
+              <i class="fa fa-info-circle mr-2"></i> This prototype demonstrates how BioVis Explorer could be customized
+              to analyze compounds in the context of specific research initiatives at the Institute for Biomedicine.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card mb-4">
+          <div class="card-header bg-secondary text-white">
+            <h4>Future Integration Possibilities</h4>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="card h-100">
+                  <div class="card-body text-center">
+                    <h5 class="card-title">Custom Dataset Integration</h5>
+                    <p class="card-text">Upload proprietary research data and compare compounds with reference
+                      databases.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card h-100">
+                  <div class="card-body text-center">
+                    <h5 class="card-title">Pathway Analysis</h5>
+                    <p class="card-text">Connect compounds to biological pathways relevant to the Institute's research
+                      focus.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card h-100">
+                  <div class="card-body text-center">
+                    <h5 class="card-title">AI-Powered Predictions</h5>
+                    <p class="card-text">Leverage machine learning to predict compound interactions with specific
+                      cellular targets.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

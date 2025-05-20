@@ -18,6 +18,7 @@
               <label for="searchQuery">Search Query</label>
               <input type="text" class="form-control" id="searchQuery" [(ngModel)]="searchQuery" name="searchQuery"
                 placeholder="Enter compound name or formula" required>
+              <small class="form-text text-muted">Example searches: aspirin, caffeine, C8H10N4O2</small>
             </div>
             <button type="submit" class="btn btn-primary" [disabled]="!searchQuery">Search</button>
           </form>
@@ -42,13 +43,13 @@
       <div *ngFor="let compound of searchResults" class="col-md-4 mb-4">
         <div class="card h-100">
           <div class="card-header">
-            <h5>{{ compound.iupacName || 'Compound ' + compound.cid }}</h5>
+            <h5 class="mb-0 text-truncate">{{ compound.iupacName || 'Compound ' + compound.cid }}</h5>
           </div>
           <div class="card-body text-center">
             <img [src]="compound.imageUrl" alt="Structure of compound" class="img-fluid mb-3">
             <p><strong>CID:</strong> {{ compound.cid }}</p>
             <p><strong>Formula:</strong> {{ compound.molecularFormula }}</p>
-            <p><strong>Molecular Weight:</strong> {{ compound.molecularWeight | number:'1.2-2' }} g/mol</p>
+            <p><strong>Molecular Weight:</strong> {{ compound.molecularWeight }} g/mol</p>
           </div>
           <div class="card-footer text-center">
             <a [routerLink]="['/compound', compound.cid]" class="btn btn-primary">View Details</a>

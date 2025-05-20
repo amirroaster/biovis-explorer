@@ -19,7 +19,7 @@
           </ol>
         </nav>
         <h2>{{ compound.iupacName || 'Compound ' + compound.cid }}</h2>
-        <p class="text-muted">CID: {{ compound.cid }}</p>
+        <p class="text-muted">PubChem CID: {{ compound.cid }}</p>
       </div>
     </div>
 
@@ -44,7 +44,7 @@
             <div class="row">
               <div class="col-md-6">
                 <p><strong>Molecular Formula:</strong> {{ compound.molecularFormula }}</p>
-                <p><strong>Molecular Weight:</strong> {{ compound.molecularWeight | number:'1.2-2' }} g/mol</p>
+                <p><strong>Molecular Weight:</strong> {{ compound.molecularWeight }} g/mol</p>
                 <p><strong>IUPAC Name:</strong> {{ compound.iupacName }}</p>
                 <p><strong>InChI Key:</strong> {{ compound.inchiKey }}</p>
               </div>
@@ -61,18 +61,7 @@
     </div>
 
     <div class="row">
-      <div class="col-md-6">
-        <div class="card mb-4">
-          <div class="card-header bg-primary text-white">
-            <h4>Property Profile</h4>
-          </div>
-          <div class="card-body">
-            <div id="radarChart" style="min-height: 300px;"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-6">
+      <div class="col-md-12">
         <div class="card mb-4">
           <div class="card-header bg-primary text-white">
             <h4>Advanced Properties</h4>
@@ -80,8 +69,8 @@
           <div class="card-body">
             <div class="row">
               <div class="col-md-6">
-                <p><strong>Exact Mass:</strong> {{ compound.exactMass | number:'1.4-4' }}</p>
-                <p><strong>Monoisotopic Mass:</strong> {{ compound.monoisotopicMass | number:'1.4-4' }}</p>
+                <p><strong>Exact Mass:</strong> {{ compound.exactMass }}</p>
+                <p><strong>Monoisotopic Mass:</strong> {{ compound.monoisotopicMass }}</p>
                 <p><strong>Complexity:</strong> {{ compound.complexity }}</p>
               </div>
               <div class="col-md-6">
@@ -90,6 +79,7 @@
                 <p><strong>SMILES:</strong></p>
                 <p class="text-break small">{{ compound.canonicalSmiles }}</p>
               </div>
+              <p><strong>Topological Polar Surface Area:</strong> {{ compound.tpsa }} Å²</p>
             </div>
           </div>
         </div>

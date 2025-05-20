@@ -14,5 +14,6 @@ export interface Compound {
   monoisotopicMass?: number;
   complexity?: number;
   heavyAtomCount?: number;
+  tpsa?: number;
   imageUrl?: string;
 }

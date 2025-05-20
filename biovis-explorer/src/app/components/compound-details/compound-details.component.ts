@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PubchemService } from '../../services/pubchem.service';
-import { VisualizationService } from '../../services/visualization.service';
 import { Compound } from '../../models/compound';
 
 @Component({
@@ -16,13 +15,12 @@ export class CompoundDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private pubchemService: PubchemService,
-    private visualizationService: VisualizationService
+    private pubchemService: PubchemService
   ) { }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
-      const cid = +params.get('id');
+    this.route.params.subscribe(params => {
+      const cid = +params['id'];
       this.loadCompound(cid);
     });
   }
@@ -31,25 +29,15 @@ export class CompoundDetailsComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.pubchemService.getCompound(cid).subscribe({
-      next: (compound) => {
+    this.pubchemService.getCompound(cid).subscribe(
+      (compound) => {
         this.compound = compound;
         this.isLoading = false;
-
-        setTimeout(() => {
-          this.renderVisualizations();
-        }, 100);
       },
-      error: (err) => {
-        this.errorMessage = 'Error loading compound details: ' + err.message;
+      (err) => {
+        this.errorMessage = 'Error loading compound details: ' + err;
         this.isLoading = false;
       }
-    });
-  }
-
-  renderVisualizations() {
-    if (this.compound) {
-      this.visualizationService.createMultiPropertyRadarChart('radarChart', this.compound);
-    }
+    );
   }
 }

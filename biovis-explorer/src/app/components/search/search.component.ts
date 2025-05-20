@@ -17,6 +17,7 @@ export class SearchComponent implements OnInit {
   constructor(private pubchemService: PubchemService) { }
 
   ngOnInit() {
+
   }
 
   onSearch() {
@@ -38,29 +39,29 @@ export class SearchComponent implements OnInit {
       return;
     }
 
-    searchObservable.subscribe({
-      next: (result) => {
+    searchObservable.subscribe(
+      (result) => {
         if (result.cids && result.cids.length > 0) {
-          const cids = result.cids.slice(0, 20);
-          this.pubchemService.getBulkCompounds(cids).subscribe({
-            next: (compounds) => {
+          const cids = result.cids.slice(0, 10);
+          this.pubchemService.getBulkCompounds(cids).subscribe(
+            (compounds) => {
               this.searchResults = compounds;
               this.isLoading = false;
             },
-            error: (err) => {
-              this.errorMessage = 'Error fetching compound details: ' + err.message;
+            (err) => {
+              this.errorMessage = 'Error fetching compound details: ' + err;
               this.isLoading = false;
             }
-          });
+          );
         } else {
           this.searchResults = [];
           this.isLoading = false;
         }
       },
-      error: (err) => {
-        this.errorMessage = 'Error performing search: ' + err.message;
+      (err) => {
+        this.errorMessage = 'Error performing search: ' + err;
         this.isLoading = false;
       }
-    });
+    );
   }
 }

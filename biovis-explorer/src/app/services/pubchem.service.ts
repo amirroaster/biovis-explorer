@@ -40,10 +40,11 @@ export class PubchemService {
   }
 
   getCompound(cid: number): Observable<Compound> {
+
     const properties = [
       'MolecularFormula',
       'MolecularWeight',
-      'CanonicalSMILES',
+      'SMILES',
       'IUPACName',
       'XLogP',
       'HBondDonorCount',
@@ -51,7 +52,6 @@ export class PubchemService {
       'RotatableBondCount',
       'ExactMass',
       'MonoisotopicMass',
-      'TopologicalPolarSurfaceArea',
       'Complexity',
       'HeavyAtomCount',
       'Charge',
@@ -66,7 +66,7 @@ export class PubchemService {
             cid: cid,
             molecularFormula: props.MolecularFormula,
             molecularWeight: props.MolecularWeight,
-            canonicalSmiles: props.CanonicalSMILES,
+            canonicalSmiles: props.SMILES,
             iupacName: props.IUPACName,
             xlogp: props.XLogP,
             hBondDonorCount: props.HBondDonorCount,
