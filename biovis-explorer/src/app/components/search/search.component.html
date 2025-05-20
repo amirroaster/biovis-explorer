@@ -1,3 +1,64 @@
-<p>
-  search works!
-</p>
+<div class="container mt-4 mb-5">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4>Search Biomedical Compounds</h4>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="onSearch()">
+            <div class="form-group">
+              <label for="searchType">Search Type</label>
+              <select class="form-control" id="searchType" [(ngModel)]="searchType" name="searchType">
+                <option value="name">Compound Name</option>
+                <option value="formula">Molecular Formula</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="searchQuery">Search Query</label>
+              <input type="text" class="form-control" id="searchQuery" [(ngModel)]="searchQuery" name="searchQuery"
+                placeholder="Enter compound name or formula" required>
+            </div>
+            <button type="submit" class="btn btn-primary" [disabled]="!searchQuery">Search</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="mt-4 text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="mt-4 alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="searchResults && searchResults.length > 0" class="mt-4">
+    <h4>Search Results ({{ searchResults.length }} compounds found)</h4>
+    <div class="row">
+      <div *ngFor="let compound of searchResults" class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-header">
+            <h5>{{ compound.iupacName || 'Compound ' + compound.cid }}</h5>
+          </div>
+          <div class="card-body text-center">
+            <img [src]="compound.imageUrl" alt="Structure of compound" class="img-fluid mb-3">
+            <p><strong>CID:</strong> {{ compound.cid }}</p>
+            <p><strong>Formula:</strong> {{ compound.molecularFormula }}</p>
+            <p><strong>Molecular Weight:</strong> {{ compound.molecularWeight | number:'1.2-2' }} g/mol</p>
+          </div>
+          <div class="card-footer text-center">
+            <a [routerLink]="['/compound', compound.cid]" class="btn btn-primary">View Details</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="searchResults && searchResults.length === 0 && !isLoading && !errorMessage" class="mt-4 alert alert-info">
+    No compounds found matching your search criteria.
+  </div>
+</div>
