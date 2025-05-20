@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import * as d3 from 'd3';
 import { Compound } from '../models/compound';
+
+declare var d3: any; // Use declare instead of import to avoid TypeScript errors
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,6 @@ export class VisualizationService {
       .style('font-size', '16px')
       .text(title);
 
-    const maxValue = d3.max(validCompounds, d => d[property]) || 0;
 
     const x = d3.scaleBand()
       .range([0, width])
@@ -43,7 +43,7 @@ export class VisualizationService {
 
     const y = d3.scaleLinear()
       .range([height, 0])
-      .domain([0, maxValue * 1.1]);
+      .domain([0, d3.max(validCompounds, d => d[property]) * 1.1]);
 
     svg.append('g')
       .attr('transform', `translate(0,${height})`)
@@ -80,13 +80,7 @@ export class VisualizationService {
 
   createMultiPropertyRadarChart(containerId: string, compound: Compound) {
 
-    interface RadarPoint {
-      name: string;
-      value: number;
-      maxValue: number;
-    }
-
-    const properties: RadarPoint[] = [
+    const properties = [
       { name: 'MW', value: compound.molecularWeight || 0, maxValue: 500 },
       { name: 'XLogP', value: compound.xlogp || 0, maxValue: 5 },
       { name: 'H-Donors', value: compound.hBondDonorCount || 0, maxValue: 5 },
@@ -97,13 +91,14 @@ export class VisualizationService {
 
     if (properties.length === 0) return;
 
-    d3.select(`#${containerId}`).html('');
 
+    d3.select(`#${containerId}`).html('');
 
     const margin = { top: 50, right: 50, bottom: 50, left: 50 };
     const width = 400 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
     const radius = Math.min(width, height) / 2;
+
 
     const svg = d3.select(`#${containerId}`)
       .append('svg')
@@ -120,6 +115,7 @@ export class VisualizationService {
       .domain([0, 1])
       .range([0, radius]);
 
+
     const axes = svg.selectAll('.axis')
       .data(properties)
       .enter()
@@ -133,6 +129,7 @@ export class VisualizationService {
       .attr('y2', (d, i) => radius * Math.sin(angleScale(i) - Math.PI / 2))
       .attr('stroke', '#999')
       .attr('stroke-width', 1);
+
 
     axes.append('text')
       .attr('x', (d, i) => (radius + 10) * Math.cos(angleScale(i) - Math.PI / 2))
@@ -151,6 +148,7 @@ export class VisualizationService {
         return '0.3em';
       })
       .text(d => d.name);
+
 
     let pathData = '';
 

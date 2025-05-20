@@ -9,8 +9,8 @@ import { AppComponent } from './app.component';
 import { SearchComponent } from './components/search/search.component';
 import { CompoundDetailsComponent } from './components/compound-details/compound-details.component';
 import { VisualizationDashboardComponent } from './components/visualization-dashboard/visualization-dashboard.component';
-import { StructureViewerComponent } from './components/structure-viewer/structure-viewer.component';
 import { PropertyChartComponent } from './components/property-chart/property-chart.component';
+import { StructureViewerComponent } from './components/structure-viewer/structure-viewer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 
@@ -20,8 +20,8 @@ import { FooterComponent } from './components/footer/footer.component';
     SearchComponent,
     CompoundDetailsComponent,
     VisualizationDashboardComponent,
-    StructureViewerComponent,
     PropertyChartComponent,
+    StructureViewerComponent,
     HeaderComponent,
     FooterComponent
   ],

@@ -1,3 +1,106 @@
-<p>
-  visualization-dashboard works!
-</p>
+<div class="container mt-4 mb-5">
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4>Compare Compounds</h4>
+        </div>
+        <div class="card-body">
+          <p>Enter compound IDs to compare their properties (separate with commas)</p>
+          <div class="form-row">
+            <div class="col-md-8">
+              <input type="text" class="form-control" id="compoundIds" [(ngModel)]="compoundIdsInput"
+                placeholder="e.g. 2244,1983,3672" (keyup.enter)="loadCompounds()">
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-primary btn-block" (click)="loadCompounds()">Compare</button>
+            </div>
+          </div>
+          <div class="form-text text-muted mt-2">
+            Try these examples: Aspirin (2244), Caffeine (2519), Ibuprofen (3672), Acetaminophen (1983)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center mt-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger mt-4">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="compounds.length > 0 && !isLoading">
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h4>Compounds Being Compared</h4>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div *ngFor="let compound of compounds" class="col-md-3 text-center mb-3">
+                <img [src]="compound.imageUrl" alt="Structure" class="img-fluid mb-2" style="max-height: 150px;">
+                <h5>{{ compound.iupacName || 'CID: ' + compound.cid }}</h5>
+                <p class="small text-muted">{{ compound.molecularFormula }}</p>
+                <a [routerLink]="['/compound', compound.cid]" class="btn btn-sm btn-outline-primary">View Details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h4>Molecular Weight Comparison</h4>
+          </div>
+          <div class="card-body">
+            <div id="weightChart" style="min-height: 300px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h4>Hydrogen Bond Donors Comparison</h4>
+          </div>
+          <div class="card-body">
+            <div id="hBondDonorChart" style="min-height: 300px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h4>XLogP Comparison</h4>
+          </div>
+          <div class="card-body">
+            <div id="xlogpChart" style="min-height: 300px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h4>Hydrogen Bond Acceptors Comparison</h4>
+          </div>
+          <div class="card-body">
+            <div id="hBondAcceptorChart" style="min-height: 300px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

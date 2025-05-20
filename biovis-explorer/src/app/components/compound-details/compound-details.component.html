@@ -1,3 +1,125 @@
-<p>
-  compound-details works!
-</p>
+<div class="container mt-4 mb-5">
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="compound && !isLoading">
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/search">Search</a></li>
+            <li class="breadcrumb-item active">Compound Details</li>
+          </ol>
+        </nav>
+        <h2>{{ compound.iupacName || 'Compound ' + compound.cid }}</h2>
+        <p class="text-muted">CID: {{ compound.cid }}</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h4>Structure</h4>
+          </div>
+          <div class="card-body text-center">
+            <img [src]="compound.imageUrl" alt="Chemical structure" class="img-fluid">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h4>Basic Properties</h4>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Molecular Formula:</strong> {{ compound.molecularFormula }}</p>
+                <p><strong>Molecular Weight:</strong> {{ compound.molecularWeight | number:'1.2-2' }} g/mol</p>
+                <p><strong>IUPAC Name:</strong> {{ compound.iupacName }}</p>
+                <p><strong>InChI Key:</strong> {{ compound.inchiKey }}</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>XLogP:</strong> {{ compound.xlogp }}</p>
+                <p><strong>Hydrogen Bond Donors:</strong> {{ compound.hBondDonorCount }}</p>
+                <p><strong>Hydrogen Bond Acceptors:</strong> {{ compound.hBondAcceptorCount }}</p>
+                <p><strong>Rotatable Bonds:</strong> {{ compound.rotatableBondCount }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h4>Property Profile</h4>
+          </div>
+          <div class="card-body">
+            <div id="radarChart" style="min-height: 300px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h4>Advanced Properties</h4>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Exact Mass:</strong> {{ compound.exactMass | number:'1.4-4' }}</p>
+                <p><strong>Monoisotopic Mass:</strong> {{ compound.monoisotopicMass | number:'1.4-4' }}</p>
+                <p><strong>Complexity:</strong> {{ compound.complexity }}</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Heavy Atom Count:</strong> {{ compound.heavyAtomCount }}</p>
+                <p><strong>Charge:</strong> {{ compound.charge || 0 }}</p>
+                <p><strong>SMILES:</strong></p>
+                <p class="text-break small">{{ compound.canonicalSmiles }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h4>External Resources</h4>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12">
+                <p>
+                  <a [href]="'https://pubchem.ncbi.nlm.nih.gov/compound/' + compound.cid" target="_blank"
+                    class="btn btn-outline-primary mr-2">
+                    View on PubChem
+                  </a>
+                  <a [href]="'https://www.ncbi.nlm.nih.gov/pccompound?term=%22' + compound.cid + '%22[CID]'"
+                    target="_blank" class="btn btn-outline-primary mr-2">
+                    Search in PubMed
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
