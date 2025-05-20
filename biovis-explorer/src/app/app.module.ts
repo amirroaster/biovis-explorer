@@ -12,6 +12,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { StructureViewerComponent } from './components/structure-viewer/structure-viewer.component';
 import { PropertyChartComponent } from './components/property-chart/property-chart.component';
+import { MoleculeViewerComponent } from './components/molecule-viewer/molecule-viewer.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { PropertyChartComponent } from './components/property-chart/property-cha
     HeaderComponent,
     FooterComponent,
     StructureViewerComponent,
-    PropertyChartComponent
+    PropertyChartComponent,
+    MoleculeViewerComponent
   ],
   imports: [
     BrowserModule,

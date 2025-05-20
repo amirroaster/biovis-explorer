@@ -1,0 +1,14 @@
+<div class="card">
+  <div class="card-header bg-primary text-white">
+    <h4>3D Molecule Structure</h4>
+  </div>
+  <div class="card-body">
+    <div [id]="viewerId" class="viewer_3Dmoljs"></div>
+    <div class="text-center mt-3">
+      <button class="btn btn-sm btn-outline-primary mr-2" (click)="setStyle('stick')">Stick</button>
+      <button class="btn btn-sm btn-outline-primary mr-2" (click)="setStyle('sphere')">Sphere</button>
+      <button class="btn btn-sm btn-outline-primary mr-2" (click)="setStyle('line')">Line</button>
+      <button class="btn btn-sm btn-outline-primary" (click)="reset()">Reset</button>
+    </div>
+  </div>
+</div>

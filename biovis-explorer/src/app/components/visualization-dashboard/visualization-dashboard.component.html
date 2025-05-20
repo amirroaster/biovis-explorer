@@ -55,6 +55,24 @@
       </div>
     </div>
 
+    <div class="row mb-4" *ngIf="compounds.length > 0">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h4>3D Structure Comparison</h4>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-4" *ngFor="let compound of compounds; let i = index">
+                <h5 class="text-center">{{ compound.iupacName || 'CID: ' + compound.cid }}</h5>
+                <app-molecule-viewer [cid]="compound.cid" [viewerId]="'molecule-viewer-' + i"></app-molecule-viewer>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
     <div class="row">
       <div class="col-md-12">
