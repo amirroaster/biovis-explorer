@@ -14,10 +14,49 @@ export class SearchComponent implements OnInit {
   errorMessage = '';
   isLoading = false;
 
+
+  suggestions: string[] = [];
+  showSuggestions = false;
+
   constructor(private pubchemService: PubchemService) { }
 
   ngOnInit() {
 
+    console.log('Search component initialized');
+  }
+
+  onSearchInput() {
+    if (this.searchQuery && this.searchQuery.length >= 2) {
+      this.pubchemService.getAutocompleteSuggestions(this.searchQuery)
+        .subscribe(
+          function(suggestions) {
+            this.suggestions = suggestions;
+            this.showSuggestions = suggestions.length > 0;
+          }.bind(this),
+          function(error) {
+            console.error('Error getting suggestions:', error);
+            this.suggestions = [];
+            this.showSuggestions = false;
+          }.bind(this)
+        );
+    } else {
+      this.suggestions = [];
+      this.showSuggestions = false;
+    }
+  }
+
+  selectSuggestion(suggestion: string) {
+    this.searchQuery = suggestion;
+    this.showSuggestions = false;
+    this.onSearch();
+  }
+
+  hideSuggestions() {
+    var self = this;
+
+    setTimeout(function() {
+      self.showSuggestions = false;
+    }, 200);
   }
 
   onSearch() {
@@ -26,8 +65,10 @@ export class SearchComponent implements OnInit {
     this.errorMessage = '';
     this.searchResults = [];
     this.isLoading = true;
+    this.showSuggestions = false;
 
-    let searchObservable;
+    var searchObservable;
+    var self = this;
 
     if (this.searchType === 'name') {
       searchObservable = this.pubchemService.searchByName(this.searchQuery);
@@ -40,27 +81,28 @@ export class SearchComponent implements OnInit {
     }
 
     searchObservable.subscribe(
-      (result) => {
+      function(result) {
         if (result.cids && result.cids.length > 0) {
-          const cids = result.cids.slice(0, 10);
-          this.pubchemService.getBulkCompounds(cids).subscribe(
-            (compounds) => {
-              this.searchResults = compounds;
-              this.isLoading = false;
+
+          var cids = result.cids.slice(0, 10);
+          self.pubchemService.getBulkCompounds(cids).subscribe(
+            function(compounds) {
+              self.searchResults = compounds;
+              self.isLoading = false;
             },
-            (err) => {
-              this.errorMessage = 'Error fetching compound details: ' + err;
-              this.isLoading = false;
+            function(err) {
+              self.errorMessage = 'Error fetching compound details: ' + err;
+              self.isLoading = false;
             }
           );
         } else {
-          this.searchResults = [];
-          this.isLoading = false;
+          self.searchResults = [];
+          self.isLoading = false;
         }
       },
-      (err) => {
-        this.errorMessage = 'Error performing search: ' + err;
-        this.isLoading = false;
+      function(err) {
+        self.errorMessage = 'Error performing search: ' + err;
+        self.isLoading = false;
       }
     );
   }
