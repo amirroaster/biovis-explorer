@@ -19,24 +19,26 @@ export class CompoundDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
+    const self = this;
+    this.route.params.subscribe(function(params) {
       const cid = +params['id'];
-      this.loadCompound(cid);
+      self.loadCompound(cid);
     });
   }
 
   loadCompound(cid: number) {
-    this.isLoading = true;
-    this.errorMessage = '';
+    const self = this;
+    self.isLoading = true;
+    self.errorMessage = '';
 
     this.pubchemService.getCompound(cid).subscribe(
-      (compound) => {
-        this.compound = compound;
-        this.isLoading = false;
+      function(compound) {
+        self.compound = compound;
+        self.isLoading = false;
       },
-      (err) => {
-        this.errorMessage = 'Error loading compound details: ' + err;
-        this.isLoading = false;
+      function(err) {
+        self.errorMessage = 'Error loading compound details: ' + err;
+        self.isLoading = false;
       }
     );
   }

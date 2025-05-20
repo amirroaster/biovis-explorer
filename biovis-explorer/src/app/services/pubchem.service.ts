@@ -157,4 +157,17 @@ export class PubchemService {
         })
       );
   }
+  getBioactivityData(cid: number): Observable<any> {
+    const self = this;
+    return this.http.get(`${this.baseUrl}/compound/cid/${cid}/assaysummary/JSON`)
+      .pipe(
+        map(function(response: any) {
+          return response;
+        }),
+        catchError(function(error) {
+          console.error('API Error:', error);
+          return throwError(new Error('Error fetching bioactivity data'));
+        })
+      );
+  }
 }

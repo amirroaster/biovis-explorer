@@ -1,0 +1,110 @@
+<div class="card mb-4">
+  <div class="card-header bg-primary text-white">
+    <h4>Bioactivity Summary</h4>
+  </div>
+  <div class="card-body">
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+    </div>
+
+    <div *ngIf="!loading && !error && bioactivityData">
+
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <h5>Activity Overview</h5>
+          <div class="card">
+            <div class="card-body">
+              <p><strong>Total Assays:</strong> {{ summaryStats.totalAssays }}</p>
+              <p><strong>Active in:</strong> {{ summaryStats.activeCount }} assays ({{ (summaryStats.activeCount /
+                summaryStats.totalAssays * 100).toFixed(1) }}%)</p>
+              <p><strong>Inactive in:</strong> {{ summaryStats.inactiveCount }} assays ({{ (summaryStats.inactiveCount /
+                summaryStats.totalAssays * 100).toFixed(1) }}%)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <h5>Assay Types</h5>
+          <div class="card">
+            <div class="card-body p-0"> <!-- Removed padding for cleaner scrolling -->
+              <!-- Fixed height scrollable container -->
+              <div class="assay-types-container" style="max-height: 250px; overflow-y: auto;">
+                <ul class="list-group list-group-flush">
+                  <li *ngFor="let type of objectKeys(displayedAssayTypes)"
+                    class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ type }}
+                    <span class="badge badge-primary badge-pill">{{ displayedAssayTypes[type] }}</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div *ngIf="hasMoreAssayTypes" class="text-center py-2 border-top">
+                <button class="btn btn-sm btn-outline-primary" (click)="loadMoreAssayTypes()">
+                  Show More Assay Types
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <h5>Target Family Distribution</h5>
+          <div class="card">
+            <div class="card-body">
+              <ul class="list-group">
+                <li *ngFor="let family of objectKeys(summaryStats.targetFamilies)"
+                  class="list-group-item d-flex justify-content-between align-items-center">
+                  {{ family }}
+                  <span class="badge badge-primary badge-pill">{{ summaryStats.targetFamilies[family] }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <button class="btn btn-outline-primary mr-2" (click)="showDetailedView = !showDetailedView">
+          {{ showDetailedView ? 'Hide' : 'Show' }} Detailed Bioactivity Data
+        </button>
+        <a [href]="'https://pubchem.ncbi.nlm.nih.gov/compound/' + cid + '#section=BioAssay-Results'" target="_blank"
+          class="btn btn-outline-primary">
+          View on PubChem
+        </a>
+      </div>
+
+      <div *ngIf="showDetailedView" class="mt-4">
+        <h5>Detailed Bioactivity Data</h5>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Assay Name</th>
+                <th>Activity Outcome</th>
+                <th>Assay Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of bioactivityData.Table.Row.slice(0, 10)">
+                <td>{{ row.Cell[9] }}</td>
+                <td>{{ row.Cell[4] }}</td>
+                <td>{{ row.Cell[11] }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="bioactivityData.Table.Row.length > 10" class="text-center mt-3">
+          <p>Showing 10 of {{ bioactivityData.Table.Row.length }} results</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

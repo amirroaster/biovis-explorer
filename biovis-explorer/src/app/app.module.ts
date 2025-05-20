@@ -13,6 +13,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { StructureViewerComponent } from './components/structure-viewer/structure-viewer.component';
 import { PropertyChartComponent } from './components/property-chart/property-chart.component';
 import { MoleculeViewerComponent } from './components/molecule-viewer/molecule-viewer.component';
+import { BioactivitySummaryComponent } from './components/bioactivity-summary/bioactivity-summary.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { MoleculeViewerComponent } from './components/molecule-viewer/molecule-v
     FooterComponent,
     StructureViewerComponent,
     PropertyChartComponent,
-    MoleculeViewerComponent
+    MoleculeViewerComponent,
+    BioactivitySummaryComponent
   ],
   imports: [
     BrowserModule,

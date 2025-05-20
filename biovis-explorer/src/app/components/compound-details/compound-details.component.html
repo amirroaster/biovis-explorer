@@ -35,12 +35,6 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-12">
-          <app-molecule-viewer [cid]="compound.cid" viewerId="compound-3d-view"></app-molecule-viewer>
-        </div>
-      </div>
-
       <div class="col-md-8">
         <div class="card mb-4">
           <div class="card-header bg-primary text-white">
@@ -68,6 +62,12 @@
 
     <div class="row">
       <div class="col-md-12">
+        <app-molecule-viewer [cid]="compound.cid" viewerId="compound-3d-view"></app-molecule-viewer>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
         <div class="card mb-4">
           <div class="card-header bg-primary text-white">
             <h4>Advanced Properties</h4>
@@ -85,10 +85,15 @@
                 <p><strong>SMILES:</strong></p>
                 <p class="text-break small">{{ compound.canonicalSmiles }}</p>
               </div>
-              <p><strong>Topological Polar Surface Area:</strong> {{ compound.tpsa }} Å²</p>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <app-bioactivity-summary [cid]="compound.cid"></app-bioactivity-summary>
       </div>
     </div>
 
