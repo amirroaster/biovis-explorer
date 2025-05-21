@@ -1,0 +1,135 @@
+.docking-container {
+  width: 100%;
+  height: 400px;
+  position: relative;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f8f9fa;
+}
+
+.loader-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 10;
+}
+
+.affinity-meter {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.affinity-dial {
+  width: 120px;
+  height: 60px;
+  background-color: #f8f9fa;
+  border-radius: 120px 120px 0 0;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #ddd;
+  border-bottom: none;
+
+  &:before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ddd;
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 10px;
+    background-color: #ddd;
+  }
+}
+
+.affinity-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  height: 60px;
+  background-color: #dc3545;
+  transform-origin: bottom center;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.affinity-value {
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 16px;
+  color: #dc3545;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.interaction-list {
+  padding-left: 20px;
+  margin-bottom: 20px;
+
+  li {
+    margin-bottom: 8px;
+  }
+}
+
+.interaction-type {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  margin-right: 5px;
+  color: white;
+
+  &.Hydrogen {
+    background-color: #007bff;
+  }
+
+  &.Hydrophobic {
+    background-color: #28a745;
+  }
+
+  &.\π-\π {
+    background-color: #6f42c1;
+  }
+
+  &.Ionic {
+    background-color: #fd7e14;
+  }
+}
+
+.active-site-residues {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.residue-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background-color: #e9ecef;
+  font-size: 12px;
+
+  &.highlighted {
+    background-color: #ffc107;
+    font-weight: bold;
+  }
+}

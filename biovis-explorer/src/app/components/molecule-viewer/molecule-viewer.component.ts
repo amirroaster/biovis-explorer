@@ -92,4 +92,61 @@ export class MoleculeViewerComponent implements OnInit, OnChanges {
     this.viewer.zoomTo();
     this.setStyle('stick');
   }
+
+
+setColorByAtom() {
+  if (!this.viewer) return;
+
+  this.viewer.setStyle({}, {stick: {colorscheme: 'Jmol'}});
+  this.viewer.render();
+}
+
+setColorByCharge() {
+  if (!this.viewer) return;
+
+  const chargeColors = {
+    'positive': 'blue',
+    'negative': 'red',
+    'neutral': 'white'
+  };
+
+  this.viewer.setStyle({}, {stick: {}, sphere: {}, cartoon: {}});
+  this.viewer.setStyle({elem: 'N'}, {stick: {color: 'blue'}});
+  this.viewer.setStyle({elem: 'O'}, {stick: {color: 'red'}});
+  this.viewer.setStyle({elem: 'S'}, {stick: {color: 'yellow'}});
+  this.viewer.render();
+}
+
+toggleSurface() {
+  if (!this.viewer) return;
+
+  if (this.viewer.surfaceOn) {
+    this.viewer.removeSurface();
+    this.viewer.surfaceOn = false;
+  } else {
+    this.viewer.addSurface($3Dmol.SurfaceType.VDW, {
+      opacity: 0.7,
+      color: 'white'
+    });
+    this.viewer.surfaceOn = true;
+  }
+  this.viewer.render();
+}
+
+downloadStructure() {
+
+  alert('This would download the current structure in a common chemical file format.');
+}
+
+rotateStructure() {
+  if (!this.viewer) return;
+
+  this.viewer.spin(true);
+
+  setTimeout(() => {
+    if (this.viewer) {
+      this.viewer.spin(false);
+    }
+  }, 5000);
+}
 }

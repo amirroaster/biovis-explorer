@@ -1,0 +1,151 @@
+<div class="container mt-4 mb-5">
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4>Molecular Docking Simulation</h4>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-info">
+            <i class="fa fa-info-circle mr-2"></i>
+            This interactive visualization demonstrates how drug compounds bind to protein targets.
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="ligandSelect">Select Ligand (Drug):</label>
+                <select class="form-control" id="ligandSelect" [(ngModel)]="selectedLigand" (change)="updateDocking()">
+                  <option value="aspirin">Aspirin (Acetylsalicylic acid)</option>
+                  <option value="ibuprofen">Ibuprofen</option>
+                  <option value="celecoxib">Celecoxib</option>
+                  <option value="acetaminophen">Acetaminophen (Paracetamol)</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="proteinSelect">Select Protein Target:</label>
+                <select class="form-control" id="proteinSelect" [(ngModel)]="selectedProtein"
+                  (change)="updateDocking()">
+                  <option value="cox1">Cyclooxygenase-1 (COX-1)</option>
+                  <option value="cox2">Cyclooxygenase-2 (COX-2)</option>
+                  <option value="pde5">Phosphodiesterase-5 (PDE5)</option>
+                  <option value="ace2">Angiotensin-Converting Enzyme 2 (ACE2)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-8">
+              <div id="docking-viewer" class="docking-container">
+                <!-- 3D Viewer would be injected here -->
+                <div *ngIf="isLoading" class="loader-overlay">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                  <p class="mt-2">Loading docking simulation...</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card h-100">
+                <div class="card-header bg-light">
+                  <h5 class="mb-0">Binding Analysis</h5>
+                </div>
+                <div class="card-body">
+                  <div *ngIf="bindingData">
+                    <h6>Binding Affinity</h6>
+                    <div class="d-flex align-items-center mb-3">
+                      <div class="affinity-meter" [attr.data-value]="bindingData.score">
+                        <div class="affinity-dial">
+                          <div class="affinity-indicator" [style.transform]="'rotate(' + getDialRotation() + 'deg)'">
+                          </div>
+                        </div>
+                        <div class="affinity-value">{{ bindingData.score }} kcal/mol</div>
+                      </div>
+                    </div>
+
+                    <h6>Key Interactions</h6>
+                    <ul class="interaction-list">
+                      <li *ngFor="let interaction of bindingData.interactions">
+                        <span [ngClass]="'interaction-type ' + interaction.type">
+                          {{ interaction.type }}
+                        </span>
+                        <strong>{{ interaction.residue }}</strong>
+                        ({{ interaction.distance }}Å)
+                      </li>
+                    </ul>
+
+                    <h6>Active Site Residues</h6>
+                    <div class="active-site-residues">
+                      <span *ngFor="let residue of bindingData.activeResidues" class="residue-tag"
+                        [ngClass]="{'highlighted': residue.isKey}">
+                        {{ residue.name }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header bg-light">
+                  <h5 class="mb-0">Docking Controls</h5>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <div class="form-group">
+                        <label for="displayModeSelect">Display Mode:</label>
+                        <select class="form-control" id="displayModeSelect" [(ngModel)]="displayMode"
+                          (change)="updateDisplayMode()">
+                          <option value="cartoon">Cartoon (Ribbon)</option>
+                          <option value="stick">Stick Model</option>
+                          <option value="sphere">Space-filling</option>
+                          <option value="surface">Molecular Surface</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="form-group">
+                        <label for="colorSchemeSelect">Color Scheme:</label>
+                        <select class="form-control" id="colorSchemeSelect" [(ngModel)]="colorScheme"
+                          (change)="updateColorScheme()">
+                          <option value="element">By Element</option>
+                          <option value="chain">By Chain</option>
+                          <option value="residue">By Residue Type</option>
+                          <option value="bfactor">By Temperature (B-factor)</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label>Animation Controls:</label>
+                      <div class="btn-group">
+                        <button class="btn btn-outline-primary" (click)="playDockingAnimation()">
+                          <i class="fa fa-play"></i> Play
+                        </button>
+                        <button class="btn btn-outline-primary" (click)="pauseAnimation()">
+                          <i class="fa fa-pause"></i> Pause
+                        </button>
+                        <button class="btn btn-outline-primary" (click)="resetViewer()">
+                          <i class="fa fa-refresh"></i> Reset
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

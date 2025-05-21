@@ -5,10 +5,23 @@
   <div class="card-body">
     <div [id]="viewerId" class="viewer_3Dmoljs"></div>
     <div class="text-center mt-3">
-      <button class="btn btn-sm btn-outline-primary mr-2" (click)="setStyle('stick')">Stick</button>
-      <button class="btn btn-sm btn-outline-primary mr-2" (click)="setStyle('sphere')">Sphere</button>
-      <button class="btn btn-sm btn-outline-primary mr-2" (click)="setStyle('line')">Line</button>
-      <button class="btn btn-sm btn-outline-primary" (click)="reset()">Reset</button>
+      <div class="btn-group mb-2">
+        <button class="btn btn-sm btn-outline-primary" (click)="setStyle('stick')">Stick</button>
+        <button class="btn btn-sm btn-outline-primary" (click)="setStyle('sphere')">Sphere</button>
+        <button class="btn btn-sm btn-outline-primary" (click)="setStyle('line')">Line</button>
+      </div>
+
+      <div class="btn-group mb-2 ml-2">
+        <button class="btn btn-sm btn-outline-secondary" (click)="setColorByAtom()">Color by Element</button>
+        <button class="btn btn-sm btn-outline-secondary" (click)="setColorByCharge()">Color by Charge</button>
+      </div>
+
+      <div class="btn-group ml-2">
+        <button class="btn btn-sm btn-outline-info" (click)="toggleSurface()">Toggle Surface</button>
+        <button class="btn btn-sm btn-outline-info" (click)="rotateStructure()">Rotate (5s)</button>
+        <button class="btn btn-sm btn-outline-info" (click)="downloadStructure()">Download</button>
+        <button class="btn btn-sm btn-outline-info" (click)="reset()">Reset</button>
+      </div>
     </div>
   </div>
 </div>

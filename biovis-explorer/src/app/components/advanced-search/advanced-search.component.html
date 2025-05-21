@@ -1,0 +1,159 @@
+<div class="container mt-4 mb-5">
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4>Advanced Compound Search</h4>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-info">
+            <i class="fa fa-info-circle mr-2"></i> Search for compounds based on structural and physicochemical
+            properties
+          </div>
+
+          <form (ngSubmit)="onSearch()">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="molecularWeightMin">Molecular Weight (g/mol)</label>
+                  <div class="input-group">
+                    <input type="number" class="form-control" id="molecularWeightMin"
+                      [(ngModel)]="searchParams.molecularWeightMin" name="molecularWeightMin" placeholder="Min" min="0">
+                    <div class="input-group-prepend input-group-append">
+                      <span class="input-group-text">to</span>
+                    </div>
+                    <input type="number" class="form-control" id="molecularWeightMax"
+                      [(ngModel)]="searchParams.molecularWeightMax" name="molecularWeightMax" placeholder="Max" min="0">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="xlogpMin">XLogP (Hydrophobicity)</label>
+                  <div class="input-group">
+                    <input type="number" class="form-control" id="xlogpMin" [(ngModel)]="searchParams.xlogpMin"
+                      name="xlogpMin" placeholder="Min" step="0.1">
+                    <div class="input-group-prepend input-group-append">
+                      <span class="input-group-text">to</span>
+                    </div>
+                    <input type="number" class="form-control" id="xlogpMax" [(ngModel)]="searchParams.xlogpMax"
+                      name="xlogpMax" placeholder="Max" step="0.1">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="hBondDonors">H-Bond Donors</label>
+                  <div class="input-group">
+                    <input type="number" class="form-control" id="hBondDonors" [(ngModel)]="searchParams.hBondDonorsMax"
+                      name="hBondDonors" placeholder="Max" min="0">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="hBondAcceptors">H-Bond Acceptors</label>
+                  <div class="input-group">
+                    <input type="number" class="form-control" id="hBondAcceptors"
+                      [(ngModel)]="searchParams.hBondAcceptorsMax" name="hBondAcceptors" placeholder="Max" min="0">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="rotatableBonds">Rotatable Bonds</label>
+                  <div class="input-group">
+                    <input type="number" class="form-control" id="rotatableBonds"
+                      [(ngModel)]="searchParams.rotatableBondsMax" name="rotatableBonds" placeholder="Max" min="0">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="substructure">Substructure SMILES (Optional)</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="substructure" [(ngModel)]="searchParams.substructure"
+                      name="substructure" placeholder="Enter SMILES notation">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary" type="button" (click)="openStructureDrawer()">
+                        <i class="fa fa-pencil"></i> Draw
+                      </button>
+                    </div>
+                  </div>
+                  <small class="form-text text-muted">Example: c1ccccc1 (benzene)</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="similarityCompound">Similarity Search (Optional)</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="similarityCompound"
+                      [(ngModel)]="searchParams.similarityCompound" name="similarityCompound"
+                      placeholder="Enter compound CID">
+                    <div class="input-group-append">
+                      <div class="input-group-text">
+                        Threshold:
+                      </div>
+                    </div>
+                    <select class="form-control" style="max-width: 100px;"
+                      [(ngModel)]="searchParams.similarityThreshold" name="similarityThreshold">
+                      <option value="0.9">90%</option>
+                      <option value="0.85">85%</option>
+                      <option value="0.8">80%</option>
+                      <option value="0.75">75%</option>
+                      <option value="0.7">70%</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+              <button type="button" class="btn btn-outline-secondary" (click)="resetForm()">Reset</button>
+              <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results section - similar to your current search results display -->
+  <div *ngIf="isLoading" class="mt-4 text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="mt-4 alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="searchResults && searchResults.length > 0" class="mt-4">
+    <h4>Advanced Search Results ({{ searchResults.length }} compounds found)</h4>
+    <div class="row">
+      <div *ngFor="let compound of searchResults" class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-header">
+            <h5 class="mb-0 text-truncate">{{ compound.iupacName || 'Compound ' + compound.cid }}</h5>
+          </div>
+          <div class="card-body text-center">
+            <img [src]="compound.imageUrl" alt="Structure of compound" class="img-fluid mb-3">
+            <p><strong>CID:</strong> {{ compound.cid }}</p>
+            <p><strong>Formula:</strong> {{ compound.molecularFormula }}</p>
+            <p><strong>Molecular Weight:</strong> {{ compound.molecularWeight }} g/mol</p>
+          </div>
+          <div class="card-footer text-center">
+            <a [routerLink]="['/compound', compound.cid]" class="btn btn-primary">View Details</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

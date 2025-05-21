@@ -14,6 +14,10 @@ import { StructureViewerComponent } from './components/structure-viewer/structur
 import { PropertyChartComponent } from './components/property-chart/property-chart.component';
 import { MoleculeViewerComponent } from './components/molecule-viewer/molecule-viewer.component';
 import { BioactivitySummaryComponent } from './components/bioactivity-summary/bioactivity-summary.component';
+import { AdvancedSearchComponent } from './components/advanced-search/advanced-search.component';
+import { PathwayAnalysisComponent } from './components/pathway-analysis/pathway-analysis.component';
+import { DockingSimulationComponent } from './components/docking-simulation/docking-simulation.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -26,13 +30,17 @@ import { BioactivitySummaryComponent } from './components/bioactivity-summary/bi
     StructureViewerComponent,
     PropertyChartComponent,
     MoleculeViewerComponent,
-    BioactivitySummaryComponent
+    BioactivitySummaryComponent,
+    AdvancedSearchComponent,
+    PathwayAnalysisComponent,
+    DockingSimulationComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
