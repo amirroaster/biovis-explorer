@@ -1,6 +1,8 @@
-import { Component, OnInit, AfterViewInit, OnChanges } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnChanges, ViewChild, ElementRef } from '@angular/core';
 import { PubchemService } from '../../services/pubchem.service';
 import { Compound } from '../../models/compound';
+
+import * as Chart from 'chart.js';
 
 declare var d3: any;
 
@@ -10,10 +12,13 @@ declare var d3: any;
   styleUrls: ['./visualization-dashboard.component.scss']
 })
 export class VisualizationDashboardComponent implements OnInit, AfterViewInit, OnChanges {
+  @ViewChild('barChartCanvas') barChartCanvas: ElementRef;
   compoundIdsInput = '2244,2519,3672,1983'; // Default values: Aspirin, Caffeine, Ibuprofen, Acetaminophen
   compounds: Compound[] = [];
   isLoading = false;
   errorMessage = '';
+  barChart: Chart = null;
+  currentProperty = 'molecularWeight';
 
 
   propertyDisplayNames = {
@@ -29,24 +34,125 @@ export class VisualizationDashboardComponent implements OnInit, AfterViewInit, O
   constructor(private pubchemService: PubchemService) { }
 
   ngOnInit() {
-
     this.loadCompounds();
   }
 
   ngAfterViewInit() {
-
     setTimeout(() => {
       this.createRadarChart();
-      this.createBarChart('molecularWeight');
+      this.createBarChart(this.currentProperty);
     }, 1000);
   }
 
   ngOnChanges() {
+    this.updateBarChart(this.currentProperty);
+  }
 
-    setTimeout(() => {
-      this.createRadarChart();
-      this.createBarChart('molecularWeight');
-    }, 1000);
+  changeBarChartProperty(property: string) {
+    this.currentProperty = property;
+    this.updateBarChart(property);
+  }
+
+  updateBarChart(property: string) {
+    if (this.barChart) {
+      this.barChart.destroy();
+    }
+    this.createBarChart(property);
+  }
+
+  createBarChart(property: string) {
+    if (!this.compounds || this.compounds.length === 0 || !this.barChartCanvas) return;
+
+    const ctx = this.barChartCanvas.nativeElement.getContext('2d');
+
+    // Prepare data for the chart
+    const labels = this.compounds.map(compound =>
+      compound.iupacName ?
+        (compound.iupacName.length > 20 ?
+          compound.iupacName.substring(0, 17) + '...' :
+          compound.iupacName) :
+        'CID: ' + compound.cid
+    );
+
+    const data = this.compounds.map(compound => compound[property] || 0);
+
+    // Generate unique colors for each compound
+    const backgroundColor = this.generateColors(this.compounds.length, 0.7);
+    const borderColor = this.generateColors(this.compounds.length, 1);
+
+    this.barChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: this.propertyDisplayNames[property] || property,
+          data: data,
+          backgroundColor: backgroundColor,
+          borderColor: borderColor,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            callbacks: {
+              title: (tooltipItems) => {
+                const index = tooltipItems[0].dataIndex;
+                return this.compounds[index].iupacName || 'CID: ' + this.compounds[index].cid;
+              },
+              label: (context) => {
+                const value = context.raw;
+                return `${this.propertyDisplayNames[property]}: ${value}`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: this.propertyDisplayNames[property] || property
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Compound'
+            }
+          }
+        },
+        animation: {
+          duration: 1000,
+          easing: 'easeOutQuart'
+        },
+        onHover: (event, elements) => {
+          if (elements && elements.length) {
+            // Change cursor style when hovering on a bar
+            event.native.target.style.cursor = 'pointer';
+          } else {
+            event.native.target.style.cursor = 'default';
+          }
+        }
+      }
+    });
+  }
+
+  // Generate an array of colors with a good distribution
+  generateColors(count: number, alpha: number): string[] {
+    const colors = [];
+    const hueStep = 360 / count;
+
+    for (let i = 0; i < count; i++) {
+      colors.push(`hsla(${i * hueStep}, 80%, 60%, ${alpha})`);
+    }
+
+    return colors;
   }
 
   loadCompounds() {
@@ -316,110 +422,4 @@ export class VisualizationDashboardComponent implements OnInit, AfterViewInit, O
       .style('font-weight', 'bold');
   }
 
-  createBarChart(property: string) {
-    if (!this.compounds || this.compounds.length === 0) return;
-
-
-    const container = document.getElementById('barChartContainer');
-    if (!container) return;
-    container.innerHTML = '';
-
-
-    const margin = { top: 40, right: 20, bottom: 60, left: 60 };
-    const width = 600 - margin.left - margin.right;
-    const height = 300 - margin.top - margin.bottom;
-
-
-    const svg = d3.select('#barChartContainer')
-      .append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append('g')
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-    const self = this;
-
-
-    const domainArray = [];
-    for (let i = 0; i < this.compounds.length; i++) {
-      domainArray.push(this.compounds[i].iupacName || ('CID: ' + this.compounds[i].cid));
-    }
-
-
-    const x = d3.scaleBand()
-      .range([0, width])
-      .domain(domainArray)
-      .padding(0.2);
-
-
-    let maxVal = 0;
-    for (let i = 0; i < this.compounds.length; i++) {
-      const value = this.compounds[i][property] || 0;
-      if (value > maxVal) {
-        maxVal = value;
-      }
-    }
-
-    const y = d3.scaleLinear()
-      .range([height, 0])
-      .domain([0, maxVal * 1.1]);
-
-
-    svg.append('g')
-      .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(x))
-      .selectAll('text')
-      .attr('transform', 'translate(-10,0)rotate(-45)')
-      .style('text-anchor', 'end')
-      .style('font-size', '12px');
-
-
-    svg.append('g')
-      .call(d3.axisLeft(y));
-
-
-    for (let i = 0; i < this.compounds.length; i++) {
-      const compound = this.compounds[i];
-      const label = compound.iupacName || ('CID: ' + compound.cid);
-      const value = compound[property] || 0;
-
-      svg.append('rect')
-        .attr('x', x(label))
-        .attr('y', y(value))
-        .attr('width', x.bandwidth())
-        .attr('height', height - y(value))
-        .attr('fill', '#4e79a7');
-    }
-
-
-    svg.append('text')
-      .attr('x', width / 2)
-      .attr('y', -margin.top / 2)
-      .attr('text-anchor', 'middle')
-      .style('font-size', '16px')
-      .style('font-weight', 'bold')
-      .text(this.propertyDisplayNames[property] || property);
-
-
-    svg.append('text')
-      .attr('x', width / 2)
-      .attr('y', height + margin.bottom - 10)
-      .attr('text-anchor', 'middle')
-      .style('font-size', '14px')
-      .text('Compound');
-
-
-    svg.append('text')
-      .attr('transform', 'rotate(-90)')
-      .attr('x', -(height / 2))
-      .attr('y', -margin.left + 15)
-      .attr('text-anchor', 'middle')
-      .style('font-size', '14px')
-      .text(this.propertyDisplayNames[property] || property);
-  }
-
-
-  changeBarChartProperty(property: string) {
-    this.createBarChart(property);
-  }
 }

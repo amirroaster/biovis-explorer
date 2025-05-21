@@ -113,12 +113,28 @@
                 <option value="complexity">Molecular Complexity</option>
               </select>
             </div>
-            <div id="barChartContainer" style="min-height: 400px;"></div>
+
+            <div class="chart-container" style="position: relative; height:400px;">
+              <canvas #barChartCanvas></canvas>
+            </div>
+
+            <div class="mt-4 legend-container">
+              <div class="row">
+                <div *ngFor="let compound of compounds; let i = index" class="col-md-3 mb-2">
+                  <div class="legend-item d-flex align-items-center">
+                    <div class="color-swatch mr-2"
+                      [style.background-color]="'hsla(' + (i * 360 / compounds.length) + ', 80%, 60%, 0.7)'"></div>
+                    <div class="compound-name text-truncate small">
+                      {{ compound.iupacName || 'CID: ' + compound.cid }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
 
     <div class="row">
       <div class="col-md-12">
