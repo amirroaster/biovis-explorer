@@ -44,7 +44,6 @@ The Visualization Dashboard Component enables side-by-side comparison of multipl
 
 ![Diagram](snapshots/comparison.png)
 ![Diagram](snapshots/comparison1.png)
-![Diagram](snapshots/propertyComparison1.png)
 ![Diagram](snapshots/detailedDataComparison.png)
 ![Demo Video](snapshots/propertyComparison1.gif)
 
